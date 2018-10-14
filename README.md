@@ -4,9 +4,8 @@ Wrapper around Samsung's SmartThings API
 Sample Request JSON:
 ```json
 { 
-	"authCode": "********", 
-	"deviceName": "Tray Light",
-	"action": "turnLightOn"
-	}
+    "authCode": "********", 
+    "deviceName": "Tray Light",
+    "action": "turnLightOn"
 }
 ```
