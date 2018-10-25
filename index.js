@@ -18,7 +18,10 @@ app.post('/', async (req, res) => {
                 case 'turnLightOn':
                     response = await smartthingsService.turnLightOn(req.body.deviceName)
                     break
+                default:
+                    response = `Invalid action: ${req.body.action}`
             }
+            console.log(response)
             res.write(response)
         }
     }
