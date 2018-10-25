@@ -19,7 +19,7 @@ const findDeviceIdsByName = async (deviceName) => {
 const turnLightOn = async (deviceName) => {
     const devicesFound = await findDeviceIdsByName(deviceName)
 
-    if (!Array.isArray(devicesFound) || !devicesFound.length) {
+    if (!Array.isArray(devicesFound) || devicesFound.length == 0) {
         return `No devices found for {${deviceName}}`
     }
     
@@ -37,7 +37,7 @@ const turnLightOn = async (deviceName) => {
 const turnLightOff = async (deviceName) => {
     const devicesFound = await findDeviceIdsByName(deviceName)
 
-    if (!Array.isArray(devicesFound) || !devicesFound.length) {
+    if (!Array.isArray(devicesFound) || devicesFound.length == 0) {
         return `No devices found for {${deviceName}}`
     }
     
