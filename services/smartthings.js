@@ -7,6 +7,7 @@ const findDevicesByName = async (deviceName) => {
     await st.devices.listDevices()
     .then(deviceList => {
         deviceList.items.forEach(device => {
+            console.log(device.label + device.name)
             if ((device.label || device.name).toLowerCase() == deviceName.toLowerCase()) {
                 matchedDevices.push(device)
             }
@@ -20,27 +21,16 @@ const deviceIdFromDevice = (device) => {
     return device.deviceId
 }
 
-const turnLightOn = async (deviceName) => {
-    const devicesFound = await findDevicesByName(deviceName)
-
-    if (!Array.isArray(devicesFound) || devicesFound.length == 0) {
-        return `No devices found for {${deviceName}}`
-    }
-
-    const deviceId = deviceIdFromDevice(devicesFound[0])
-    
-    const commands = [{
-        command: 'on',
+const commandToSetSwitchPowerState = (power) => {
+    return [{
+        command: power ? 'on' : 'off',
         capability: 'switch',
         component: 'main',
         arguments: []
     }]
-
-    await st.devices.executeDeviceCommand(deviceId, commands)
-    return `Device ${deviceId} turned on`
 }
 
-const turnLightOff = async (deviceName) => {
+const setSwitchPowerState = async (deviceName, power) => {
     const devicesFound = await findDevicesByName(deviceName)
 
     if (!Array.isArray(devicesFound) || devicesFound.length == 0) {
@@ -48,19 +38,24 @@ const turnLightOff = async (deviceName) => {
     }
 
     const deviceId = deviceIdFromDevice(devicesFound[0])
-    
-    const commands = [{
-        command: 'off',
-        capability: 'switch',
-        component: 'main',
-        arguments: []
-    }]
 
-    await st.devices.executeDeviceCommand(deviceId, commands)
-    return `Device ${deviceId} turned off`
+    await st.devices.executeDeviceCommand(deviceId, commandToSetSwitchPowerState(power))
+
+    return `Device ${deviceId} turned ${power ? 'on' : 'off'}`
+}
+
+const setAllSwitchesPowerState = async (power) => {
+    st.devices.listDevicesByCapability('switch')
+    .then(deviceList => {
+        deviceList.items.forEach(async (device) => {
+            await st.devices.executeDeviceCommand(deviceIdFromDevice(device), commandToSetSwitchPowerState(power))
+        })
+    })
+
+    return `All switches turned ${power ? 'on' : 'off'}`
 }
 
 module.exports = {
-    turnLightOff,
-    turnLightOn
+    setAllSwitchesPowerState,
+    setSwitchPowerState
 }

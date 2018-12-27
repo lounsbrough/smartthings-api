@@ -11,14 +11,20 @@ app.post('/', async (req, res) => {
     let smartthingsService = require('./services/smartthings')
     res.writeHead(200, { 'Content-Type': 'text/plain' })
     if (req.body.authCode && req.body.authCode == process.env.HTTPS_AUTHENTICATION_SECRET) {
-        if (req.body.deviceName && req.body.action) {
+        if (req.body.action) {
             let response
             switch (req.body.action) {
-                case 'turnLightOff':
-                    response = await smartthingsService.turnLightOff(req.body.deviceName)
+                case 'turnSwitchOff':
+                    response = await smartthingsService.setSwitchPowerState(req.body.deviceName || '', false)
                     break
-                case 'turnLightOn':
-                    response = await smartthingsService.turnLightOn(req.body.deviceName)
+                case 'turnSwitchOn':
+                    response = await smartthingsService.setSwitchPowerState(req.body.deviceName || '', true)
+                    break
+                case 'turnAllSwitchesOff':
+                    response = await smartthingsService.setAllSwitchesPowerState(false)
+                    break
+                case 'turnAllSwitchesOn':
+                    response = await smartthingsService.setAllSwitchesPowerState(true)
                     break
                 default:
                     response = `Invalid action: ${req.body.action}`
