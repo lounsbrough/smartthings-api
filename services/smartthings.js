@@ -7,7 +7,6 @@ const findDevicesByName = async (deviceName) => {
     await st.devices.listDevices()
     .then(deviceList => {
         deviceList.items.forEach(device => {
-            console.log(device.label + device.name)
             if ((device.label || device.name).toLowerCase() == deviceName.toLowerCase()) {
                 matchedDevices.push(device)
             }
