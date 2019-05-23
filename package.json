@@ -1,0 +1,15 @@
+{
+  "name": "smartthings",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:lounsbrough/smartthings-api.git",
+  "author": "David Lounsbrough <david.lounsbrough@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.4",
+    "fs": "^0.0.1-security",
+    "smartthings-node": "^0.0.4",
+    "winston": "^3.1.0",
+    "winston-daily-rotate-file": "^3.3.3"
+  }
+}
