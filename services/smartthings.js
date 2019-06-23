@@ -51,8 +51,6 @@ const setAllSwitchesPowerState = async (power, exceptions) => {
     st.devices.listDevicesByCapability('switch')
     .then(deviceList => {
         deviceList.items.forEach(async (device) => {
-            console.log(device);
-
             if (exceptions && exceptions.map(e => e.toLowerCase()).includes(deviceLabelFromDevice(device).toLowerCase())) {
                 return
             }
