@@ -7,7 +7,7 @@ const findDevicesByName = async (deviceName) => {
     await st.devices.listDevices()
     .then(deviceList => {
         deviceList.items.forEach(device => {
-            if ((device.label || device.name).toLowerCase() == deviceName.toLowerCase()) {
+            if (deviceLabelFromDevice(device).toLowerCase() == deviceName.toLowerCase()) {
                 matchedDevices.push(device)
             }
         })
@@ -18,6 +18,10 @@ const findDevicesByName = async (deviceName) => {
 
 const deviceIdFromDevice = (device) => {
     return device.deviceId
+}
+
+const deviceLabelFromDevice = (device) => {
+    return device.label || device.name
 }
 
 const commandToSetSwitchPowerState = (power) => {
@@ -43,15 +47,21 @@ const setSwitchPowerState = async (deviceName, power) => {
     return `Device ${deviceId} turned ${power ? 'on' : 'off'}`
 }
 
-const setAllSwitchesPowerState = async (power) => {
+const setAllSwitchesPowerState = async (power, exceptions) => {
     st.devices.listDevicesByCapability('switch')
     .then(deviceList => {
         deviceList.items.forEach(async (device) => {
+            console.log(device);
+
+            if (exceptions && exceptions.map(e => e.toLowerCase()).includes(deviceLabelFromDevice(device).toLowerCase())) {
+                return
+            }
+
             await st.devices.executeDeviceCommand(deviceIdFromDevice(device), commandToSetSwitchPowerState(power))
         })
     })
 
-    return `All switches turned ${power ? 'on' : 'off'}`
+    return `All switches turned ${power ? 'on' : 'off'}${exceptions ? ` with the exception of [${exceptions.join(", ")}]` : ''}`
 }
 
 module.exports = {

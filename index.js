@@ -21,10 +21,10 @@ app.post('/', async (req, res) => {
                     response = await smartthingsService.setSwitchPowerState(req.body.deviceName || '', true)
                     break
                 case 'turnAllSwitchesOff':
-                    response = await smartthingsService.setAllSwitchesPowerState(false)
+                    response = await smartthingsService.setAllSwitchesPowerState(false, req.body.exceptions)
                     break
                 case 'turnAllSwitchesOn':
-                    response = await smartthingsService.setAllSwitchesPowerState(true)
+                    response = await smartthingsService.setAllSwitchesPowerState(true, req.body.exceptions)
                     break
                 default:
                     response = `Invalid action: ${req.body.action}`
