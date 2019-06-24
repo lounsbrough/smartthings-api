@@ -33,6 +33,15 @@ const commandToSetSwitchPowerState = (power) => {
     }]
 }
 
+const commandToSetSwitchPowerLevel = (level) => {
+    return [{
+        command: 'setLevel',
+        capability: 'switchLevel',
+        component: 'main',
+        arguments: [level]
+    }]
+}
+
 const setSwitchPowerState = async (deviceName, power) => {
     const devicesFound = await findDevicesByName(deviceName)
 
@@ -62,7 +71,26 @@ const setAllSwitchesPowerState = async (power, exceptions) => {
     return `All switches turned ${power ? 'on' : 'off'}${exceptions ? ` with the exception of [${exceptions.join(", ")}]` : ''}`
 }
 
+const setSwitchPowerLevel = async (deviceName, level) => {
+    if (level < 0 || level > 100) {
+        throw new Exception('Power level not in valid range')
+    }
+
+    const devicesFound = await findDevicesByName(deviceName)
+
+    if (!Array.isArray(devicesFound) || devicesFound.length == 0) {
+        return `No devices found for {${deviceName}}`
+    }
+
+    const deviceId = deviceIdFromDevice(devicesFound[0])
+
+    await st.devices.executeDeviceCommand(deviceId, commandToSetSwitchPowerLevel(level))
+
+    return `Device ${deviceId} set to level ${level}`
+}
+
 module.exports = {
+    setSwitchPowerState,
     setAllSwitchesPowerState,
-    setSwitchPowerState
+    setSwitchPowerLevel
 }
