@@ -14,6 +14,12 @@ app.post('/', async (req, res) => {
         if (req.body.action) {
             let response
             switch (req.body.action) {
+                case 'openBlind':
+                    response = await smartthingsService.setBlindOpenState(req.body.deviceName, true)
+                    break
+                case 'closeBlind':
+                    response = await smartthingsService.setBlindOpenState(req.body.deviceName, false)
+                    break
                 case 'turnSwitchOff':
                     response = await smartthingsService.setSwitchPowerState(req.body.deviceName || '', false)
                     break

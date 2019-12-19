@@ -42,6 +42,15 @@ const commandToSetSwitchPowerLevel = (level) => {
     }]
 }
 
+const commandToSetBlindOpenState = (open) => {
+    return [{
+        command: open ? 'open' : 'close',
+        capability: 'windowShade',
+        component: 'main',
+        arguments: []
+    }]
+}
+
 const setSwitchPowerState = async (deviceName, power) => {
     const devicesFound = await findDevicesByName(deviceName)
 
@@ -89,7 +98,22 @@ const setSwitchPowerLevel = async (deviceName, level) => {
     return `Device ${deviceId} set to level ${level}`
 }
 
+const setBlindOpenState = async (deviceName, open) => {
+    const devicesFound = await findDevicesByName(deviceName)
+
+    if (!Array.isArray(devicesFound) || devicesFound.length == 0) {
+        return `No devices found for {${deviceName}}`
+    }
+
+    const deviceId = deviceIdFromDevice(devicesFound[0])
+
+    await st.devices.executeDeviceCommand(deviceId, commandToSetBlindOpenState(open))
+
+    return `Device ${deviceId} set to ${open ? 'open' : 'close'}`
+}
+
 module.exports = {
+    setBlindOpenState,
     setSwitchPowerState,
     setAllSwitchesPowerState,
     setSwitchPowerLevel
