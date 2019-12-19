@@ -14,11 +14,15 @@ app.post('/', async (req, res) => {
         if (req.body.action) {
             let response
             switch (req.body.action) {
-                case 'openBlind':
-                    response = await smartthingsService.setBlindOpenState(req.body.deviceName, true)
+                case 'openBlinds':
+                    response = await Promise.all(
+                        req.body.deviceNames.map(deviceName => smartthingsService.setBlindOpenState(deviceName, true))
+                    )
                     break
-                case 'closeBlind':
-                    response = await smartthingsService.setBlindOpenState(req.body.deviceName, false)
+                case 'closeBlinds':
+                    response = await Promise.all(
+                        req.body.deviceNames.map(deviceName => smartthingsService.setBlindOpenState(deviceName, false))
+                    )
                     break
                 case 'turnSwitchOff':
                     response = await smartthingsService.setSwitchPowerState(req.body.deviceName || '', false)
@@ -38,8 +42,8 @@ app.post('/', async (req, res) => {
                 default:
                     response = `Invalid action: ${req.body.action}`
             }
-            logger.info(response)
-            res.write(response)
+            logger.info(response.toString())
+            res.write(response.toString())
         }
     }
     res.end()
