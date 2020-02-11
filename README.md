@@ -5,7 +5,7 @@ Sample Request JSON:
 ```json
 { 
     "authCode": "********", 
-    "deviceName": "Tray Light",
+    "deviceName": "Master Tray Light",
     "action": "turnLightOn"
 }
 ```
