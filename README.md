@@ -6,6 +6,6 @@ Sample Request JSON:
 { 
     "authCode": "********", 
     "deviceName": "Master Tray Light",
-    "action": "turnLightOn"
+    "action": "turnSwitchOn"
 }
 ```
